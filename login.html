@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResourceMatch — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:,">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0f1f;
+      --bg2:     #141b34;
+      --bg3:     #1c2545;
+      --text:    #f8fafc;
+      --muted:   #9aa4b2;
+      --accent:  #4f8cff;
+      --accent2: #22c55e;
+      --border:  rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.18);
+      --danger:  #ef4444;
+      --radius:  14px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1a2445, #0a0f1f 70%);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .logo-dot {
+      width: 10px; height: 10px;
+      background: linear-gradient(135deg, #4f8cff, #22c55e);
+      border-radius: 50%;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .auth-tab {
+      padding: 9px;
+      text-align: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .auth-tab.active {
+      background: rgba(79,140,255,0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+  
+    .method-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .method-tab {
+      padding: 8px;
+      text-align: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .method-tab.active {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: rgba(34,197,94,0.1);
+    }
+
+    /* ── Role Selector ── */
+    .role-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .role-card {
+      padding: 14px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .role-card:hover { border-color: var(--border2); filter: brightness(1.1); }
+
+    .role-card.active-ngo {
+      background: rgba(79,140,255,0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .role-card.active-volunteer {
+      background: rgba(34,197,94,0.12);
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .role-icon { font-size: 22px; margin-bottom: 4px; }
+    .role-label { font-size: 12px; font-weight: 500; }
+    .role-desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+   
+    .field-group { margin-bottom: 12px; }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    input::placeholder { color: rgba(154,164,178,0.5); }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,140,255,0.15);
+    }
+
+    
+    .btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f8cff, #22c55e);
+      color: white;
+    }
+
+    .btn-primary:hover { filter: brightness(1.1); }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #22c55e, #06b6d4);
+      color: white;
+    }
+
+    .btn-sm {
+      width: auto;
+      padding: 10px 14px;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+   
+    .otp-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .alert {
+      font-size: 12px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .alert-error {
+      color: #fca5a5;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    .alert-success {
+      color: #86efac;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-card">
+
+
+  <div class="logo">
+    <div class="logo-dot"></div>
+    ResourceMatch
+  </div>
+  <p class="tagline">Smart Volunteer Coordination for Social Impact</p>
+
+ 
+  <div class="auth-tabs">
+    <button class="auth-tab active" onclick="switchAuthTab('signin', this)">Sign In</button>
+    <button class="auth-tab"        onclick="switchAuthTab('signup', this)">Sign Up</button>
+  </div>
+
+  
+  <div id="alertError"   class="alert alert-error"></div>
+  <div id="alertSuccess" class="alert alert-success"></div>
+
+ 
+  <div id="roleSection" style="display:none;">
+    <div class="section-title">I am registering as</div>
+    <div class="role-selector">
+      <div class="role-card" id="roleNGO" onclick="selectRole('ngo')">
+        <div class="role-icon">🏢</div>
+        <div class="role-label">NGO / Admin</div>
+        <div class="role-desc">Add needs, manage volunteers</div>
+      </div>
+      <div class="role-card" id="roleVol" onclick="selectRole('volunteer')">
+        <div class="role-icon">🙋</div>
+        <div class="role-label">Volunteer</div>
+        <div class="role-desc">Find tasks, offer help</div>
+      </div>
+    </div>
+    
+<div class="field-group" id="adminCodeGroup" style="display:none;">
+  <label>🔐 Admin Access Code</label>
+  <input type="password" id="adminCode" placeholder="Enter code given by your organization">
+</div>
+    <div class="divider">then choose login method</div>
+  </div>
+
+  <div class="method-tabs">
+    <button class="method-tab active" onclick="switchMethod('email', this)">📧 Email</button>
+    <button class="method-tab"        onclick="switchMethod('phone', this)">📱 Phone</button>
+  </div>
+
+ 
+  <div id="emailForm">
+   
+    <div class="field-group" id="nameGroup" style="display:none;">
+      <label>Full Name</label>
+      <input type="text" id="authName" placeholder="e.g. Rahul Sharma">
+    </div>
+    <div class="field-group">
+      <label>Email Address</label>
+      <input type="email" id="authEmail" placeholder="you@example.com">
+    </div>
+    <div class="field-group">
+      <label>Password</label>
+      <input type="password" id="authPassword" placeholder="Min. 6 characters">
+    </div>
+    <button class="btn btn-primary" id="emailBtn" onclick="handleEmail()">Sign In</button>
+  </div>
+
+  
+  <div id="phoneForm" style="display:none;">
+   
+    <div class="field-group" id="phoneNameGroup" style="display:none;">
+      <label>Full Name</label>
+      <input type="text" id="authPhoneName" placeholder="e.g. Rahul Sharma">
+    </div>
+    <div class="field-group">
+      <label>Phone Number</label>
+      <div class="otp-row">
+        <input type="tel" id="authPhone" placeholder="+91 9876543210">
+        <button class="btn btn-primary btn-sm" id="sendOtpBtn" onclick="handleSendOTP()">Send OTP</button>
+      </div>
+    </div>
+    <div class="field-group" id="otpGroup" style="display:none;">
+      <label>Enter OTP</label>
+      <div class="otp-row">
+        <input type="text" id="authOTP" placeholder="6-digit code" maxlength="6">
+        <button class="btn btn-secondary btn-sm" onclick="handleVerifyOTP()">Verify</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="recaptcha-container"></div>
+
+</div>
+
+<script type="module" src="loginLogic.js"></script>
+</body>
+</html>

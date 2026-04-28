@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResourceMatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <span>ResourceMatch</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;">
+  <p class="tagline">Smart Volunteer Coordination for Social Impact</p>
+  <span style="font-size:13px;color:var(--muted);" id="welcomeMsg"></span>
+  <button class="btn btn-outline" style="width:auto;padding:6px 16px;" onclick="handleLogout()">Sign Out</button>
+</div>
+
+    </div>
+  </header>
+
+  <main class="container">
+
+    
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-num" id="s-needs">0</div>
+        <div class="stat-label">Community Needs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-vols">0</div>
+        <div class="stat-label">Volunteers</div>
+      </div>
+      <div class="stat-card urgent">
+        <div class="stat-num" id="s-high">0</div>
+        <div class="stat-label">High Urgency</div>
+      </div>
+      <div class="stat-card matched">
+        <div class="stat-num" id="s-matches">0</div>
+        <div class="stat-label">Matches Found</div>
+      </div>
+    </div>
+
+    
+    <div class="two-col">
+
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon need-icon">N</div>
+          <div>
+            <div class="card-title">Add Community Need</div>
+            <div class="card-sub">Report a task that needs volunteers</div>
+          </div>
+        </div>
+
+        <form id="needForm">
+          <div class="form-row">
+            <div class="field-group">
+              <label>Task Title</label>
+              <input type="text" id="title" placeholder="e.g. Food Distribution Drive" required>
+            </div>
+            <div class="field-group">
+              <label>Location</label>
+              <input type="text" id="location" placeholder="e.g. Sector 14, Gurugram" required>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Required Skill</label>
+            <input type="text" id="skill" placeholder="e.g. Medical, Teaching, Logistics" required>
+          </div>
+          <div class="field-group">
+            <label>Urgency Level</label>
+            <div class="urgency-toggle" id="urgencyToggle">
+              <button type="button" class="urgency-btn low" data-value="Low" onclick="setUrgency('Low', this)">Low</button>
+              <button type="button" class="urgency-btn med active-med" data-value="Medium" onclick="setUrgency('Medium', this)">Medium</button>
+              <button type="button" class="urgency-btn high" data-value="High" onclick="setUrgency('High', this)">High</button>
+            </div>
+            <input type="hidden" id="urgency" value="Medium">
+          </div>
+          <button type="submit" class="btn btn-primary">+ Add Need</button>
+        </form>
+
+        
+        <div class="divider"><span>or import from file</span></div>
+        <div class="upload-zone" onclick="document.getElementById('csvFile').click()">
+          <div class="upload-icon">📄</div>
+          <div class="upload-text">Upload CSV File</div>
+          <div class="upload-hint">Format: title, location, skill, urgency</div>
+        </div>
+        <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleCSV(event)">
+        <div id="csvStatus"></div>
+
+        
+        <div style="margin-top: 20px;">
+          <div class="section-label">Active Needs (<span id="needCount">0</span>)</div>
+          <div id="needsList">
+            <div class="empty-state">No needs added yet</div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon vol-icon">V</div>
+          <div>
+            <div class="card-title">Register Volunteer</div>
+            <div class="card-sub">Add someone ready to help</div>
+          </div>
+        </div>
+
+        <form id="volForm">
+          <div class="form-row">
+            <div class="field-group">
+              <label>Full Name</label>
+              <input type="text" id="vname" placeholder="e.g. Rahul Sharma" required>
+            </div>
+            <div class="field-group">
+              <label>Phone / Email <span class="hint-text">(unique ID)</span></label>
+              <input type="text" id="vcontact" placeholder="e.g. rahul@email.com" required>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Skills <span class="hint-text">(comma-separated)</span></label>
+            <input type="text" id="vskill" placeholder="e.g. Medical, Teaching, Logistics" required>
+          </div>
+          <div class="field-group">
+            <label>Location</label>
+            <input type="text" id="vlocation" placeholder="e.g. Sector 14, Gurugram" required>
+          </div>
+          <div class="field-group">
+            <label>Availability</label>
+            <div class="tag-input-wrapper" id="tagWrapper">
+              <div id="tagList"></div>
+              <input type="text" id="vavailInput" placeholder="e.g. Weekends" onkeydown="handleTagInput(event)">
+            </div>
+            <input type="hidden" id="vavail">
+          </div>
+          <button type="submit" class="btn btn-secondary">+ Add Volunteer</button>
+        </form>
+
+        
+        <div style="margin-top: 20px;">
+          <div class="section-label">Registered Volunteers (<span id="volCount">0</span>)</div>
+          <div id="volunteersList">
+            <div class="empty-state">No volunteers registered yet</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    
+    <div class="two-col">
+
+      
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('chart', this)">Breakdown</button>
+          <button class="tab" onclick="switchTab('map', this)">🗺 Map View</button>
+          <button class="tab" onclick="switchTab('export', this)">Export</button>
+        </div>
+
+        <div id="tab-chart">
+          <div id="chartArea">
+            <div class="empty-state">Add needs to see breakdown</div>
+          </div>
+        </div>
+
+        <div id="tab-map" style="display:none;">
+          <div class="map-legend">
+            <span class="map-legend-item"><span class="map-dot need-dot"></span>Need</span>
+            <span class="map-legend-item"><span class="map-dot vol-dot"></span>Volunteer</span>
+            <span class="map-legend-item">
+              <svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#22c55e" stroke-width="2" stroke-dasharray="5,4"/></svg>
+              Match
+            </span>
+          </div>
+          
+          <div id="resourceMap"></div>
+          <div class="map-hint">Click any pin for details · Lines show best matches</div>
+        </div>
+
+        <div id="tab-export" style="display:none;">
+          <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn btn-outline" onclick="exportNeeds()">⬇ Export Needs as CSV</button>
+            <button class="btn btn-outline" onclick="exportVolunteers()">⬇ Export Volunteers as CSV</button>
+            <button class="btn btn-outline" onclick="exportMatches()">⬇ Export Matches as CSV</button>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px;">Smart Matches</div>
+        <div class="card-sub" style="margin-bottom:16px;">AI-scored volunteer-to-need pairing · auto-runs on new entries</div>
+        <div id="matchesList">
+          <div class="empty-state">Add a need and a volunteer to see matches</div>
+        </div>
+        <button class="btn btn-match" onclick="findMatches()">⚡ Re-run Matching</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="match.js"></script>
+  <script src="map.js"></script>
+  <script type="module" src="app.js"></script>
+
+  <script>
+   
+    function setUrgency(value, btn) {
+      document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active-low', 'active-med', 'active-high'));
+      const map = { Low: 'active-low', Medium: 'active-med', High: 'active-high' };
+      btn.classList.add(map[value]);
+      document.getElementById('urgency').value = value;
+    }
+
+   
+    let availTags = [];
+    function handleTagInput(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const val = e.target.value.trim().replace(/,$/, '');
+        if (val && !availTags.includes(val)) {
+          availTags.push(val);
+          renderTags();
+        }
+        e.target.value = '';
+        syncAvail();
+      }
+    }
+    function removeTag(idx) {
+      availTags.splice(idx, 1);
+      renderTags();
+      syncAvail();
+    }
+    function renderTags() {
+      const list = document.getElementById('tagList');
+      list.innerHTML = availTags.map((t, i) =>
+        `<span class="avail-tag">${t} <button type="button" onclick="removeTag(${i})">×</button></span>`
+      ).join('');
+    }
+    function syncAvail() {
+      document.getElementById('vavail').value = availTags.join(', ');
+    }
+    function resetTags() {
+      availTags = [];
+      renderTags();
+      syncAvail();
+    }
+  </script>
+
+</body>
+</html>

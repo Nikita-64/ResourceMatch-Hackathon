@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResourceMatch — Volunteer Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <span>ResourceMatch</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:13px;color:var(--muted);" id="welcomeMsg">Welcome!</span>
+        <button class="btn btn-outline" style="width:auto;padding:6px 16px;" onclick="handleLogout()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+   
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="v-totalNeeds">0</div>
+        <div class="stat-label">Open Tasks</div>
+      </div>
+      <div class="stat-card urgent">
+        <div class="stat-num" id="v-highNeeds">0</div>
+        <div class="stat-label">High Urgency</div>
+      </div>
+      <div class="stat-card matched">
+        <div class="stat-num" id="v-myMatches">0</div>
+        <div class="stat-label">My Matches</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="v-accepted">0</div>
+        <div class="stat-label">Accepted Tasks</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon vol-icon">V</div>
+          <div>
+            <div class="card-title">My Profile</div>
+            <div class="card-sub">Your skills and availability</div>
+          </div>
+        </div>
+
+        <form id="profileForm">
+          <div class="field-group">
+            <label>Full Name</label>
+            <input type="text" id="pName" placeholder="e.g. Rahul Sharma" required>
+          </div>
+          <div class="field-group">
+            <label>My Skill</label>
+            <input type="text" id="pSkill" placeholder="e.g. Medical, Teaching, Logistics" required>
+          </div>
+          <div class="field-group">
+            <label>My Location</label>
+            <input type="text" id="pLocation" placeholder="e.g. Sector 14, Gurugram" required>
+          </div>
+          <div class="field-group">
+            <label>Availability</label>
+            <input type="text" id="pAvail" placeholder="e.g. Weekends, Evenings">
+          </div>
+          <button type="submit" class="btn btn-secondary">Save Profile & Find Matches</button>
+        </form>
+      </div>
+
+     
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px;">Tasks Matched to Me</div>
+        <div class="card-sub" style="margin-bottom:16px;">Based on your skill and location</div>
+        <div id="myMatchesList">
+          <div class="empty-state">Fill your profile and click "Save Profile" to see matches</div>
+        </div>
+      </div>
+
+    </div>
+
+  
+    <div class="card">
+      <div class="card-title" style="margin-bottom:4px;">All Open Community Needs</div>
+      <div class="card-sub" style="margin-bottom:16px;">Browse all tasks available</div>
+      <div id="allNeedsList">
+        <div class="empty-state">Loading tasks...</div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="match.js"></script>
+  <script type="module" src="volunteerApp.js"></script>
+
+</body>
+</html>
