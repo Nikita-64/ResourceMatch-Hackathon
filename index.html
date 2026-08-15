@@ -219,10 +219,16 @@
 
   
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <script src="match.js"></script>
   <script src="map.js"></script>
   <script type="module" src="app.js"></script>
+  <script type="module">
+    import { logOut } from "./auth.js";
+    window.handleLogout = async function () {
+      await logOut();
+      window.location.href = "login.html";
+    };
+  </script>
 
   <script>
    
