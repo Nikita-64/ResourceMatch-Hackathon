@@ -89,19 +89,6 @@ export async function sendOTP(phoneNumber) {
   }
 }
 
-export async function verifyOTP(otp, role, name) {
-  try {
-    const result = await window.confirmationResult.confirm(otp);
-    const user = result.user;
-    const existing = await getUserRole(user.uid);
-    if (!existing) await saveUserRole(user.uid, role, name);
-    const data = await getUserRole(user.uid);
-    return { success: true, user, role: data?.role };
-  } catch (e) {
-    console.error("OTP verify error:", e.message);
-    return { success: false, error: e.message };
-  }
-}
 
 export async function logOut() {
   await signOut(auth);
@@ -115,33 +102,16 @@ export function getCurrentUser() {
   return auth.currentUser;
 }
 
-// ── 6. Auth State Listener (Guard & Loop Stopper) ──────────
-onUserStateChange(async (user) => {
-  const currentPage = window.location.pathname;
-
-  
-  if (!user && !currentPage.includes("login.html")) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  
-  if (user && currentPage.includes("login.html")) {
+export async function verifyOTP(otp, role, name) {
+  try {
+    const result = await window.confirmationResult.confirm(otp);
+    const user = result.user;
+    const existing = await getUserRole(user.uid);
+    if (!existing) await saveUserRole(user.uid, role || "volunteer", name || "");
     const data = await getUserRole(user.uid);
-    if (data?.role === "volunteer") {
-      window.location.href = "volunteer.html";
-    } else {
-      window.location.href = "index.html";
-    }
-    return;
+    return { success: true, user, role: data?.role, name: data?.name };
+  } catch (e) {
+    console.error("OTP verify error:", e.message);
+    return { success: false, error: e.message };
   }
-
-  
-  if (user) {
-    const data = await getUserRole(user.uid);
-    const welcomeMsg = document.getElementById("welcomeMsg");
-    if (welcomeMsg) {
-      welcomeMsg.textContent = `Welcome, ${data?.name || user.email || "User"}!`;
-    }
-  }
-});
+}
