@@ -61,7 +61,11 @@ function findMyMatches(volunteer) {
     return;
   }
 
-  
+  if (typeof window.runMatchingEngine !== "function") {
+  document.getElementById("myMatchesList").innerHTML =
+    '<div class="empty-state">Matching engine not loaded. Please refresh.</div>';
+  return;
+}
   const results = window.runMatchingEngine([volunteer], allNeeds);
 
   const matched = results.filter(r => r.matched && r.score > 0);
