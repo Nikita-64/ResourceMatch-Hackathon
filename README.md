@@ -29,7 +29,7 @@ Each volunteer is scored against every need:
 - Two roles: NGO Admin and Volunteer
 - Admin access protected by invite code
 - Role-based dashboard routing
-## 🔐 Test Credentials
+##  Test Credentials
 
 ### Admin (NGO)
 **Sign In (existing account)**
