@@ -30,6 +30,16 @@ Each volunteer is scored against every need:
 - Admin access protected by invite code
 - Role-based dashboard routing
 
+## 🔐 Test Credentials
+
+### To test as NGO / Admin
+- Sign up with any email and password
+- Select **NGO / Admin** role
+- Enter Admin Code: `NGO@2025`
+
+### To test as Volunteer
+- Sign up with any email and password
+- Select **Volunteer** role
 ##  Features
 - Smart volunteer-to-need matching algorithm
 - Real-time Firebase database
