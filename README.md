@@ -29,17 +29,42 @@ Each volunteer is scored against every need:
 - Two roles: NGO Admin and Volunteer
 - Admin access protected by invite code
 - Role-based dashboard routing
-
 ## 🔐 Test Credentials
 
-### To test as NGO / Admin
-- Sign up with any email and password
+### Admin (NGO)
+**Sign In (existing account)**
+| Field | Value |
+|-------|-------|
+| Email | admin@resourcematch.com |
+| Password | Admin@123 |
+
+**Sign Up (new account)**
 - Select **NGO / Admin** role
 - Enter Admin Code: `NGO@2025`
+- Then register with any email and password
 
-### To test as Volunteer
-- Sign up with any email and password
+---
+
+### Volunteer
+**Sign In (existing account)**
+| Field | Value |
+|-------|-------|
+| Email | volunteer@resourcematch.com |
+| Password | Volunteer@123 |
+
+**Sign Up (new account)**
 - Select **Volunteer** role
+- Then register with any email and password
+
+---
+
+### Phone OTP Testing
+| Role | Number | OTP |
+|------|--------|-----|
+| Admin | +91 1112223330| 123456 |
+| Volunteer | +91 1234567890| 123456 |
+
+
 ##  Features
 - Smart volunteer-to-need matching algorithm
 - Real-time Firebase database
